@@ -1,0 +1,75 @@
+{% extends "invoices/base.html" %}
+
+{% block title %}All Invoices | Billing System{% endblock %}
+{% block header %}All Invoices{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>All Invoices</h1>
+        <p class="muted">View and manage every invoice in your system.</p>
+    </div>
+    <a class="btn" href="{% url 'add_invoice' %}">＋ Add Invoice</a>
+</div>
+
+<div class="panel">
+    <form method="GET" action="{% url 'all_invoices' %}" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+        <input
+            type="search"
+            name="q"
+            value="{{ search_query }}"
+            placeholder="Search customer or invoice number..."
+            style="flex:1;min-width:200px;padding:11px;border:1px solid #cbd5e1;border-radius:8px"
+        >
+        <button class="btn" type="submit">Search</button>
+        <a class="btn btn-light" href="{% url 'all_invoices' %}">Clear</a>
+    </form>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Invoice #</th>
+                <th>Customer</th>
+                <th>Date Created</th>
+                <th>Amount</th>
+                <th>Payment Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in invoices %}
+            <tr>
+                <td>{{ item.invoice_number }}</td>
+                <td>{{ item.customer_name }}</td>
+                <td>{{ item.date_created|date:"d M Y, H:i" }}</td>
+                <td>Rs. {{ item.amount|floatformat:2 }}</td>
+                <td>
+                    {% if item.is_paid %}
+                        <span class="status paid">Paid</span>
+                    {% else %}
+                        <span class="status unpaid">Unpaid</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn btn-light" href="{% url 'show_one_invoice' item.pk %}">View</a>
+                    <form method="POST"
+                        action="{% url 'delete_invoice' item.pk %}"
+                        onsubmit="return confirm('Are you sure you want to delete this invoice?');">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="empty">No invoices match your search.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</div>
+{% endblock %}

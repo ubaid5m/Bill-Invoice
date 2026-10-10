@@ -1,0 +1,73 @@
+{% extends "invoices/base.html" %}
+
+{% block title %}Add Invoice | Billing System{% endblock %}
+{% block header %}Create Invoice{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>Create New Invoice</h1>
+        <p class="muted">Enter the customer's billing information below.</p>
+    </div>
+    <a class="btn btn-light" href="{% url 'all_invoices' %}">Back to Invoices</a>
+</div>
+
+<div class="panel">
+    <form method="POST">
+        {% csrf_token %}
+
+
+    {% if form.non_field_errors %}
+        <div class="error">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="form-grid">
+        <div class="field">
+            <label for="{{ form.customer_name.id_for_label }}">Customer Name</label>
+            {{ form.customer_name }}
+            {% for error in form.customer_name.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="field">
+            <label for="{{ form.invoice_number.id_for_label }}">Invoice Number</label>
+            {{ form.invoice_number }}
+            {% for error in form.invoice_number.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="field">
+            <label for="{{ form.amount.id_for_label }}">Amount (Rs.)</label>
+            {{ form.amount }}
+            {% for error in form.amount.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="field">
+            <label for="{{ form.is_paid.id_for_label }}">Payment Status</label>
+            {{ form.is_paid }}
+            {% for error in form.is_paid.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="field">
+        <label for="{{ form.notes.id_for_label }}">Notes</label>
+        {{ form.notes }}
+        {% for error in form.notes.errors %}
+            <div class="error">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn">Save Invoice</button>
+    <a class="btn btn-light" href="{% url 'all_invoices' %}">Cancel</a>
+</form>
+
+
+</div>
+{% endblock %}

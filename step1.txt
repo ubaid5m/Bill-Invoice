@@ -1,0 +1,80 @@
+step 1
+create box means folder 
+create environment python3 -m venv venv
+
+step 2
+enter inside a box by this command  -> .\venv\Scripts\activate     first environment name than tab
+
+step 3
+install pip install django 
+
+step 4 
+verification        ->  python3 -m django --version
+
+------------------------------
+now we write this after these steps  in terminal
+django-admin startproject mysite .
+django-admin   -> that is a pre constructor it installwhen we install django
+startproject   -> we call him start project 
+mysite   -> that is just a name of file 
+.   -> this dot means install these every this on that position where i am standing write now
+
+
+
+URL
+Function
+http://127.0.0.1:8000/
+
+Home
+
+http://127.0.0.1:8000/home/
+
+Sample invoices
+
+http://127.0.0.1:8000/invoices/
+
+Student marks
+
+http://127.0.0.1:8000/invoices/create/
+
+Create invoice
+
+http://127.0.0.1:8000/invoices/detail/
+
+Show one invoice
+
+http://127.0.0.1:8000/invoices/unpaid/
+
+Show unpaid invoices
+
+http://127.0.0.1:8000/invoices/mark-paid/
+
+Mark invoice as paid
+
+
+
+
+
+
+
+
+
+
+
+
+i had write this in add_invoices.html
+{% comment %} {% extends "D:\django\invoices\templates\invoices\base.html" %}
+{% block title %}Add Invoice{% endblock %}
+{% block content %}
+<h1>Add New Invoice</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">Save Invoice</button>
+</form>
+{% endblock %} {% endcomment %}
+
+

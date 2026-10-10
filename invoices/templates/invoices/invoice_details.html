@@ -1,0 +1,78 @@
+{% extends "invoices/base.html" %}
+
+{% block title %}Invoice {{ invoice.invoice_number }} | Billing System{% endblock %}
+{% block header %}Invoice Details{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>Invoice {{ invoice.invoice_number }}</h1>
+        <p class="muted">Full details of this billing record.</p>
+    </div>
+    <a class="btn btn-light" href="{% url 'all_invoices' %}">Back to Invoices</a>
+</div>
+
+<div class="panel">
+    <div class="page-heading">
+        <h2>Invoice Information</h2>
+        <form method="POST"
+            action="{% url 'delete_invoice' item.pk %}"
+            onsubmit="return confirm('Are you sure you want to delete this invoice?');">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+        {% if invoice.is_paid %}
+            <span class="status paid">Paid</span>
+        {% else %}
+            <span class="status unpaid">Unpaid</span>
+        {% endif %}
+    </div>
+
+<div class="cards">
+    <div class="card">
+        <div class="card-label">Invoice Number</div>
+        <div class="card-value">{{ invoice.invoice_number }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Amount</div>
+        <div class="card-value">Rs. {{ invoice.amount|floatformat:2 }}</div>
+    </div>
+</div>
+
+<table>
+    <tbody>
+        <tr>
+            <th>Customer Name</th>
+            <td>{{ invoice.customer_name }}</td>
+        </tr>
+        <tr>
+            <th>Date Created</th>
+            <td>{{ invoice.date_created|date:"d M Y, H:i" }}</td>
+        </tr>
+        <tr>
+            <th>Payment Status</th>
+            <td>
+                {% if invoice.is_paid %}
+                    <span class="status paid">Paid</span>
+                {% else %}
+                    <span class="status unpaid">Unpaid</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Notes</th>
+            <td>{{ invoice.notes|default:"No notes" }}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% if not invoice.is_paid %}
+<form method="POST" action="{% url 'mark_as_paid' invoice.pk %}" style="margin-top:20px">
+    {% csrf_token %}
+    <button class="btn" type="submit">Mark as Paid</button>
+</form>
+{% endif %}
+
+</div>
+{% endblock %}

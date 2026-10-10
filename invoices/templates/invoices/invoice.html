@@ -1,0 +1,76 @@
+{% extends "invoices/base.html" %}
+
+{% block title %}Invoices | Billing System{% endblock %}
+{% block header %}Invoices{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>Invoices</h1>
+        <p class="muted">Manage your customer billing records.</p>
+    </div>
+    <a class="btn" href="{% url 'add_invoice' %}">＋ New Invoice</a>
+</div>
+
+<div class="cards">
+    <div class="card">
+        <div class="card-label">Total Invoices</div>
+        <div class="card-value">{{ total_invoices }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Paid</div>
+        <div class="card-value">{{ paid_count }}</div>
+    </div>
+    <div class="card">
+        <div class="card-label">Unpaid</div>
+        <div class="card-value">{{ unpaid_count }}</div>
+    </div>
+</div>
+
+<div class="panel">
+    <h2>Latest Invoices</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Invoice Number</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoices %}
+                <tr>
+                    <td>{{ item.invoice_number }}</td>
+                    <td>{{ item.customer_name }}</td>
+                    <td>{{ item.date_created|date:"d M Y" }}</td>
+                    <td>Rs. {{ item.amount|floatformat:2 }}</td>
+                    <td>
+                        {% if item.is_paid %}
+                            <span class="status paid">Paid</span>
+                        {% else %}
+                            <span class="status unpaid">Unpaid</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a class="btn btn-light" href="{% url 'show_one_invoice' item.pk %}">View</a>
+                        <form method="POST"
+                            action="{% url 'delete_invoice' item.pk %}"
+                            onsubmit="return confirm('Are you sure you want to delete this invoice?');">
+                            {% csrf_token %}
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="empty">No invoices found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
